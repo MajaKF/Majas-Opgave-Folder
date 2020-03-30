@@ -1,0 +1,56 @@
+et rad = 50; 
+let xpos, ypos; 
+
+let xspeed = 5;
+let yspeed = 5;
+
+let xdirection = 2;
+let ydirection = 2;
+
+function setup() {
+  createCanvas(500, 500);
+  frameRate(40);
+  ellipseMode(CORNER);
+  xpos = width / 5;
+  ypos = height / 2;
+}
+
+function draw() {
+  background(100);
+  AI();
+  PC();
+  
+function AI() {
+  strokeWeight(2.5)
+  stroke(170,0,0);
+  fill(200,0,0);
+
+  xpos = xpos + xspeed * PC;
+  ypos = ypos + yspeed * PC;
+
+  if (xpos > width - rad || xpos < rad) {
+    PC *= 0;
+}
+  if (ypos > height - rad || ypos < rad) {
+    PC *= 0;
+}
+  ellipse(xpos, ypos, rad, rad);
+}
+  
+}
+  
+function PC() {
+  strokeWeight(2.5)
+  stroke(0,0,170);
+  fill(0,0,200);
+
+  if (pmouseX > width - rad || pmouseX < rad) {
+    pmouseX *= 0;
+}
+  if (pmouseY > height - rad || pmouseY < rad) {
+    pmouseY *= 0;
+}
+  
+  rect(pmouseX, pmouseY, rad, rad);
+  
+}
