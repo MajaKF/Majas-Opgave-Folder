@@ -122,11 +122,12 @@ void keyPressed() {
   if (keyCode == CONTROL) {climb = true;}
   else {climb = false;} 
   
+   if (climb == true) {Yplayer = Yplayer - 50;}
+  
   }
 }
 
 void keyReleased() {
   if (teleport == true) {Xplayer = Xplayer + 150;}
-
-  for (;climb == true; Yplayer = Ywall1) {Yplayer = Yplayer - 50;}
-}
+  
+ }

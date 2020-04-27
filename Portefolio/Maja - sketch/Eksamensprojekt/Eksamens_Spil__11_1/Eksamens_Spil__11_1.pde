@@ -3,22 +3,26 @@ float Yplayer = 570;
 float playerWidth = 20;
 float playerHeight = 20;
 float Xspeed = 10;
-float gravity = 0; 
 
 int Xground2 = 990;
 int Yground1 = 590;
 int Yground2 = 570;
-int Ywall1 = 400;
+int Yground3 = 385;
+int Ywall1 = 390;
 
 boolean teleport = false;
-boolean climb = false;
+boolean teleportRight = false;
+boolean teleportLeft = false;
+boolean climb;
+boolean climbPressed;
+boolean jump = false;
 
 color playerColor1 = color(150);
 color playerColor2 = color(120);
 color laneColor1,wallColor1 = color(90);
 color laneColor2,wallColor2 = color(60);
 
-level lane1,lane2,lane3,lane4,wall1;
+level lane1,lane2,lane3,lane4,lane5,lane6,lane7, wall1;
 
 void setup() {
   smooth();
@@ -26,6 +30,10 @@ void setup() {
   lane1 = new level(100,Yground1,200,20);
   lane2 = new level(350,Yground1,200,20);
   lane3 = new level(850,Yground1,400,20);
+  lane4 = new level(850,385,75,20);
+  lane5 = new level(650,385,125,20);
+  lane6 = new level(375,385,125,20);
+  lane7 = new level(175,385,75,20);
   wall1 = new level(Xground2,Yground2,20,Ywall1);
   
 }
@@ -36,6 +44,10 @@ void draw() {
   lane1.lane();
   lane2.lane();
   lane3.lane();
+  lane4.lane();
+  lane5.lane();
+  lane6.lane();
+  lane7.lane();
   wall1.lane();
   
 }
@@ -48,21 +60,21 @@ void player() {
   rectMode(CENTER);
   playerJump();
   playerBoundaries();
-  playerGravity();
   powerTeleport();
   powerClimb();
   
 }
 
 void playerJump() {  
+  
 //snapping player back to the ground after jumping  
   if (Yplayer >= 570) {Yplayer = 570;}
   else Yplayer += 1;
   
 //to prevent player from jumping more then once  
-  if (Yplayer <= 520) {Yplayer = 570;}
+  if ((jump == true && Yplayer <= 520)) {Yplayer = 570;}
   else Yplayer -= 0;
-
+  
 }
   
 void playerBoundaries() {   
@@ -70,21 +82,24 @@ void playerBoundaries() {
    if (Xplayer < 0) {Xplayer = 0;}
    
 // so player doesn’t  move ouside the screen (right)  
-   if (Xplayer > width) {Xplayer = 1000;}
+   if (Xplayer > width) {Xplayer = 1015;}
+   
+// so player doesn’t  move ouside the screen (up)  
+   if (Yplayer < height) {Xplayer += 0;}
 
 // So player doesn't move throught first wall
    if (Xplayer >= Xground2) {Xplayer = 970;}
+
+// so player can stand on first wall
+   if ((Xplayer >= Xground2) && (Yplayer > 390)) {Yplayer = playerHeight + 390;}
    
-}   
-   
-void playerGravity() {
 //first gab
-   if (Xplayer <= 209 || Xplayer >= 249 || Yplayer < 570) {Yplayer =+ Yplayer;}
+   if ((Xplayer <= 209 || Xplayer >= 249 || Yplayer < 570)) {Yplayer =+ Yplayer;}
    else Yplayer += 30;
    
 //second gab
-   if (Xplayer <= 459 || Xplayer >= 649 || Yplayer < 570) {Yplayer =+ Yplayer;}
-   else Yplayer += 30;   
+   if ((Xplayer <= 459 || Xplayer >= 649 || Yplayer < 570)) {Yplayer =+ Yplayer;}
+   else Yplayer += 30;  
 
 //game over
    if (Yplayer >= 600) exit();  
@@ -102,7 +117,7 @@ void powerTeleport() {
   
 }
   
-void powerClimb() {
+void powerClimb() {  
 // changing player first colour while climbing    
   if (climb == true) {playerColor1 = color(200,150,0);} 
   
@@ -113,21 +128,40 @@ void powerClimb() {
   
 void keyPressed() {
   if (key == CODED) { 
+    
+// moving right and left    
   if (keyCode == LEFT) {Xplayer -= Xspeed;}  
-  if (keyCode == RIGHT) {Xplayer += Xspeed;}  
-  if (keyCode == UP) {Yplayer -= 50;} 
+  if (keyCode == RIGHT) {Xplayer += Xspeed;}
   
+// making player jump true when up is pressed
+  if (keyCode == UP) {jump = true;}
+  else {jump = false;}
+  if (jump == true) {Yplayer = Yplayer - 50;}
+
+// making player teleport true when shift is pressed
   if (keyCode == SHIFT) {teleport = true;} 
   else {teleport = false;} 
   
-  if (keyCode == CONTROL) {climb = true;}
-  else {climb = false;} 
+  if (keyCode == RIGHT) {teleportRight = true;}
+  if (keyCode == LEFT) {teleportLeft = true;}
   
+// making player climb true when is pressed
+  if (keyCode == CONTROL) {climbPressed = true;}
+  else {climbPressed = false;} 
+  
+// making the player able to climb
+  if ((climbPressed == true) && (Xplayer >= 970) && (Yplayer >= 570)) {climb = true;}
+  else climb = false;
+  if (climb == true) {Yplayer -= 250;}
+  
+  else if ((climbPressed == true) && (Xplayer >= 970) && (Yplayer <= 300)) {climb = false;}
+
   }
 }
 
 void keyReleased() {
-  if (teleport == true) {Xplayer = Xplayer + 150;}
+  if ((teleportRight = true) && (teleport == true)) {Xplayer = Xplayer + 150;}
+  else if ((teleportLeft = true) && (teleport == true)) {Xplayer -= Xplayer - 150;}
 
-  for (;climb == true; Yplayer = Ywall1) {Yplayer = Yplayer - 50;}
-}
+ }
+ 
