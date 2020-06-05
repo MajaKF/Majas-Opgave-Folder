@@ -1,26 +1,26 @@
 class level {
 
-  int XgoundLevel,YgoundLevel,XlaneWidth,YlaneHeight; 
+  int Xlevel,Ylevel,Xwidth,Yheight; 
  
-  level(int Xgl, int Ygl, int Xlw, int Ylh) {
-  XgoundLevel = Xgl;
-  YgoundLevel = Ygl;
-  XlaneWidth = Xlw;
-  YlaneHeight = Ylh;
+  level(int Xgl, int Ygl, int Xw, int Yh) {
+  Xlevel = Xgl;
+  Ylevel = Ygl;
+  Xwidth = Xw;
+  Yheight = Yh;
 }
  void lane() {
- fill(laneColor1);
- stroke(laneColor2);
+ fill(objectColor1);
+ stroke(objectColor2);
  strokeWeight(2);
- rect(XgoundLevel,YgoundLevel,XlaneWidth,YlaneHeight);
+ rect(Xlevel,Ylevel,Xwidth,Yheight);
  
  } 
   
  void wall() {
- fill(wallColor1);
- stroke(wallColor2);
+ fill(objectColor1);
+ stroke(objectColor2);
  strokeWeight(2);
- rect(XgoundLevel,YgoundLevel,XlaneWidth,YlaneHeight); 
+ rect(Xlevel,Ylevel,Xwidth,Yheight); 
 
   }
 }
