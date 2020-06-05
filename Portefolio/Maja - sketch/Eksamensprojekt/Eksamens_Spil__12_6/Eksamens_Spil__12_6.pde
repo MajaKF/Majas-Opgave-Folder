@@ -78,7 +78,6 @@ void player() {
 }
 
 void playerJump() {  
-  
 //snapping player back to the ground after jumping  
   if (Yplayer >= 570) {Yplayer = 570;}
   else Yplayer += 1;
@@ -87,17 +86,24 @@ void playerJump() {
   if ((jump == true && Yplayer <= 520)) {Yplayer = 570;}
   else Yplayer -= 0;
   
-
-  
 }
   
-void playerBoundaries() {   
+void playerBoundaries() {  
+//game over
+   if (Yplayer >= 600) exit();  
+  
 // so player doesn’t  move ouside the screen (left)  
    if (Xplayer < 0) {Xplayer = 0;}
    
 // so player doesn’t  move ouside the screen (right)  
    if (Xplayer > width) {Xplayer = 980;}
    
+   firstFloor();
+   secondFloor();
+
+}
+   
+void firstFloor() {
 //first gab (first floor)
    if ((Xplayer <= 209 || Xplayer >= 249 || Yplayer < 570)) {Yplayer =+ Yplayer;}
    else Yplayer += 30;
@@ -106,31 +112,38 @@ void playerBoundaries() {
    if ((Xplayer <= 459 || Xplayer >= 649 || Yplayer < 570)) {Yplayer =+ Yplayer;}
    else Yplayer += 30;  
 
-//game over
-   if (Yplayer >= 600) exit();  
+}
 
+void secondFloor() {
 //so player doesn't move throught first wall
-   if ((Xplayer > 960) && (Yplayer > 365)) {Xplayer = 970;}
+   if ((Xplayer > 960) && (Yplayer > 380)) {Xplayer = 970;}
    else Xplayer -= 0;
 
 //so player can stand on first wall 
    if ((Xplayer <= 960 || Yplayer >= wallHeight1)) {Yplayer =+ Yplayer;}
    else Yplayer = 365;
    
-//so the player can move on second floor
-   if ((Xplayer <= 580 || Xplayer >= 655 || Yplayer > 350)) {Yplayer =+ Yplayer;}
-   else Yplayer = 365; 
+// first platform (second floor) 
+   if ((Xplayer <= 800 || Xplayer >= 900 || Yplayer > 380)) {Yplayer =+ Yplayer;}
+   else Yplayer = 365;
    
+// second platform (second floor) 
+   if ((Xplayer <= 578 || Xplayer >= 720.5 || Yplayer > 380)) {Yplayer =+ Yplayer;}
+   else Yplayer = 365;
+   
+// thrid platform (second floor) 
+   if ((Xplayer <= 300 || Xplayer >= 450 || Yplayer > 380)) {Yplayer =+ Yplayer;}
+   else Yplayer = 365;
    
 }
 
 void teleportColor() {
 // changing player first colour while teleporting  
-  if (teleport == true) {playerColor1 = color(150,0,220);}
+  if ((teleportRight == true) || (teleportLeft == true)) {playerColor1 = color(150,0,220);}
   else playerColor1 = 150;
   
 // changing player second colour when teleporting  
-  if (teleport == true) {playerColor2 = color(120,0,190);}
+  if ((teleportRight == true) || (teleportLeft == true)) {playerColor2 = color(120,0,190);}
   else playerColor2 = 120;
   
 }
@@ -145,8 +158,14 @@ void climbColor() {
 }
   
 void keyPressed() {
+  movement();
+  power();
+  
+}
+
+void movement() { 
   if (key == CODED) { 
-    
+ 
 // moving right and left    
   if (keyCode == LEFT) {Xplayer -= Xspeed;}  
   if (keyCode == RIGHT) {Xplayer += Xspeed;}
@@ -156,12 +175,21 @@ void keyPressed() {
   else {jump = false;}
   if (jump == true) {Yplayer = Yplayer - 50;}
 
+  }
+}
+
+void power() { 
+if (key == CODED) { 
+
 // making player teleport true when shift is pressed
-  if (keyCode == SHIFT) {teleport = true;} 
-  else {teleport = false;} 
+  if (keyCode == SHIFT) {teleportRight = true;} 
+  else {teleportRight = false;} 
+  
+  if (keyCode == CONTROL) {teleportLeft = true;} 
+  else {teleportLeft = false;} 
   
 // making player climb true when is pressed
-  if (keyCode == CONTROL) {climbPressed = true;}
+  if (keyCode == DOWN) {climbPressed = true;}
   else {climbPressed = false;} 
   
 // making the player able to climb
@@ -175,11 +203,10 @@ void keyPressed() {
 }
 
 void keyReleased() {
-  if (keyCode == RIGHT) {teleportRight = true;}
-  if (keyCode == LEFT) {teleportLeft = true;}
+//Teleport to the right
+  if (teleportRight == true) {Xplayer = Xplayer + 150;}
+  if (teleportLeft == true) {Xplayer = Xplayer - 150;}
   
-  if ((teleportRight = true) && (teleport == true)) {Xplayer = Xplayer + 150;}
-  else if ((teleportLeft = true) && (teleport == true)) {Xplayer = Xplayer - 150;}
 
  }
  
